@@ -1,9 +1,14 @@
-import { ApiRouteConfig, Handler } from "motia";
-import { success } from "zod";
+import { ApiRouteConfig, Handlers } from "motia";
+import { z } from "zod";
 
 // Step 01: SubmitChannel
 // Accepts channel name and email to start
 // Emits yt.submit event with channel name and email
+
+export const submitSchema = z.object({
+    channel: z.string(),
+    email: z.string(),
+})
 
 export const config: ApiRouteConfig = {
     type: "api",
@@ -11,7 +16,8 @@ export const config: ApiRouteConfig = {
     path: "/submit",
     method: "POST",
     emits: ["yt.submit"],
-    flows: ["yt.submit"],
+    flows: ["yt-titler"],
+    bodySchema: submitSchema,
 }
 
 interface SubmitRequest {
@@ -19,11 +25,11 @@ interface SubmitRequest {
     email: string;
 }
 
-export const handler = async (req: any, { emit, logger, state }: any) => {
+export const handler: Handlers['SubmitChannel'] = async (req: any, { emit, logger, state }: any) => {
     try {
         logger.info('Received request to submit channel', { body: req.body });
 
-        const { channel, email } = req.body as SubmitRequest;
+        const { channel, email } = submitSchema.parse(req.body);
 
         if (!channel || !email) {
             return {
@@ -47,10 +53,10 @@ export const handler = async (req: any, { emit, logger, state }: any) => {
             };
         }
 
-        const jobId = `job_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
+        const jobId: String = `job_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
 
         try {
-            await state.set('submissions', jobId, {
+            await state.set(jobId, 'jobs', {
                 jobId,
                 channel,
                 email,
@@ -63,7 +69,7 @@ export const handler = async (req: any, { emit, logger, state }: any) => {
 
         logger.info('Job added to queue', { jobId, channel, email });
 
-        await emit({ topic: 'yt.submit', payload: { jobId, channel, email } });
+        await emit({ topic: 'yt.submit', data: { jobId, channel, email } });
 
         return {
             status: 202,

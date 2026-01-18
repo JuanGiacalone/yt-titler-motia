@@ -12,5 +12,18 @@
         "sourceHandlePosition": "right"
       }
     }
+  },
+  {
+    "id": "yt-titler",
+    "config": {
+      "steps/02-resolve-channel.step.ts": {
+        "x": 207,
+        "y": 34
+      },
+      "steps/01-submit.step.ts": {
+        "x": -189,
+        "y": 1
+      }
+    }
   }
 ]
