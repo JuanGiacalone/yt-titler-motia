@@ -12,8 +12,7 @@ declare module 'motia' {
   }
 
   interface Handlers {
-    'ResolveChannel': EventHandler<never, never>
-    'SubmitChannel': ApiRouteHandler<{ channel: string; email: string }, unknown, { topic: 'yt.submit'; data: never }>
+    'SubmitChannel': ApiRouteHandler<{ channel: string; email: string }, unknown, never>
     'ProcessGreeting': EventHandler<{ timestamp: string; appName: string; greetingPrefix: string; requestId: string }, never>
     'HelloAPI': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { message: string; status: string; appName: string }>, { topic: 'process-greeting'; data: { timestamp: string; appName: string; greetingPrefix: string; requestId: string } }>
   }
