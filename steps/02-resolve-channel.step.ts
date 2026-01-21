@@ -7,7 +7,7 @@ export const config: EventConfig = {
     type: "event",
     name: "ResolveChannel",
     subscribes: ["yt.submit"],
-    emits: ["yt.channel.resolved", "yt.error"],
+    emits: ["yt.channel.resolved", "yt.channel.error"],
     flows: ["yt-titler"],
 }
 
@@ -68,7 +68,7 @@ export const handler: Handlers['ResolveChannel'] = async (input: any, { emit, lo
                 status: 'failed',
                 error: 'Channel not found',
             })
-            await emit({ topic: 'yt.error', data: { jobId, email, error: 'Channel not found' } })
+            await emit({ topic: 'yt.channel.error', data: { jobId, email, error: 'Channel not found' } })
 
             return
         }
@@ -110,7 +110,7 @@ export const handler: Handlers['ResolveChannel'] = async (input: any, { emit, lo
             error: error.message,
         })
         if (emit) {
-            await emit({ topic: 'yt.error', data: { jobId, error: error.message } })
+            await emit({ topic: 'yt.channel.error', data: { jobId, error: error.message } })
         }
         return
     }

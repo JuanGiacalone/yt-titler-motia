@@ -67,7 +67,7 @@ export const config: EventConfig = {
     flows: ["yt-titler"],
 }
 
-interface ImprovedTitle {
+export interface ImprovedTitle {
     originalTitle: string;
     improvedTitle: string;
     rational: string;
